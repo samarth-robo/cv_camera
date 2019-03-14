@@ -36,9 +36,11 @@ public:
    * @param frame_id frame_id of publishing messages.
    */
   Capture(ros::NodeHandle &node,
+          ros::NodeHandle &param_node,
           const std::string &topic_name,
           int32_t buffer_size,
-          const std::string &frame_id);
+          const std::string &frame_id,
+          const std::string &camera_name);
 
   /**
    * @brief Open capture device with device ID.
@@ -161,7 +163,7 @@ private:
   /**
    * @brief node handle for advertise.
    */
-  ros::NodeHandle node_;
+  ros::NodeHandle node_, param_node_;
 
   /**
    * @brief ROS image transport utility.

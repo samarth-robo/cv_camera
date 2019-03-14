@@ -9,14 +9,16 @@ namespace cv_camera
 
 namespace enc = sensor_msgs::image_encodings;
 
-Capture::Capture(ros::NodeHandle &node, const std::string &topic_name,
-                 int32_t buffer_size, const std::string &frame_id)
+Capture::Capture(ros::NodeHandle &node, ros::NodeHandle &param_node,
+    const std::string &topic_name, int32_t buffer_size,
+    const std::string &frame_id, const std::string &camera_name)
     : node_(node),
+      param_node_(param_node),
       it_(node_),
       topic_name_(topic_name),
       buffer_size_(buffer_size),
       frame_id_(frame_id),
-      info_manager_(node_, frame_id),
+      info_manager_(node_, camera_name),
       capture_delay_(ros::Duration(node_.param("capture_delay", 0.0)))
 {
 }
@@ -24,7 +26,7 @@ Capture::Capture(ros::NodeHandle &node, const std::string &topic_name,
 void Capture::loadCameraInfo()
 {
   std::string url;
-  if (node_.getParam("camera_info_url", url))
+  if (param_node_.getParam("camera_info_url", url))
   {
     if (info_manager_.validateURL(url))
     {
@@ -32,7 +34,7 @@ void Capture::loadCameraInfo()
     }
   }
 
-  rescale_camera_info_ = node_.param<bool>("rescale_camera_info", false);
+  rescale_camera_info_ = param_node_.param<bool>("rescale_camera_info", false);
 
   for (int i = 0;; ++i)
   {
@@ -44,7 +46,8 @@ void Capture::loadCameraInfo()
     stream.str("");
     stream << "property_" << i << "_value";
     const std::string param_for_value = stream.str();
-    if (!node_.getParam(param_for_code, code) || !node_.getParam(param_for_value, value))
+    if (!param_node_.getParam(param_for_code, code) || 
+        !param_node_.getParam(param_for_value, value))
     {
       break;
     }
@@ -118,7 +121,7 @@ void Capture::openFile(const std::string &file_path)
   pub_ = it_.advertiseCamera(topic_name_, buffer_size_);
 
   std::string url;
-  if (node_.getParam("camera_info_url", url))
+  if (param_node_.getParam("camera_info_url", url))
   {
     if (info_manager_.validateURL(url))
     {
@@ -132,7 +135,9 @@ bool Capture::capture()
   if (cap_.read(bridge_.image))
   {
     ros::Time stamp = ros::Time::now() - capture_delay_;
-    bridge_.encoding = enc::BGR8;
+    std::string enc1 = (bridge_.image.channels() == 3 ? "bgr" : "mono");
+    std::string enc2 = (bridge_.image.depth() == CV_8U ? "8" : "16");
+    bridge_.encoding = enc1 + enc2;
     bridge_.header.stamp = stamp;
     bridge_.header.frame_id = frame_id_;
 
@@ -177,7 +182,7 @@ bool Capture::setPropertyFromParam(int property_id, const std::string &param_nam
   if (cap_.isOpened())
   {
     double value = 0.0;
-    if (node_.getParam(param_name, value))
+    if (param_node_.getParam(param_name, value))
     {
       ROS_INFO("setting property %s = %lf", param_name.c_str(), value);
       return cap_.set(property_id, value);

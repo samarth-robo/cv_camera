@@ -23,20 +23,23 @@ void Driver::setup()
   double hz(DEFAULT_RATE);
   int32_t device_id(0);
   std::string device_path("");
-  std::string frame_id("camera");
+  std::string frame_id("camera_frame");
+  std::string camera_name("camera");
   std::string file_path("");
 
   private_node_.getParam("device_id", device_id);
   private_node_.getParam("frame_id", frame_id);
+  private_node_.getParam("camera_name", camera_name);
   private_node_.getParam("rate", hz);
 
   int32_t image_width(640);
   int32_t image_height(480);
 
-  camera_.reset(new Capture(camera_node_,
+  camera_node_ = ros::NodeHandle(camera_name);
+  camera_.reset(new Capture(camera_node_, private_node_,
                             "image_raw",
                             PUBLISHER_BUFFER_SIZE,
-                            frame_id));
+                            frame_id, camera_name));
 
   if (private_node_.getParam("file", file_path) && file_path != "")
   {
