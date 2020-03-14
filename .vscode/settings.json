@@ -1,0 +1,8 @@
+{
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
+    "files.associations": {
+        ".launch": "xml",
+        "*.tcc": "cpp",
+        "fstream": "cpp"
+    }
+}

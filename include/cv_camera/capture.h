@@ -4,6 +4,7 @@
 #define CV_CAMERA_CAPTURE_H
 
 #include "cv_camera/exception.h"
+#include "cv_camera/CaptureWrapper.h"
 #include <string>
 
 #include <ros/ros.h>
@@ -50,6 +51,14 @@ public:
    *
    */
   void open(int32_t device_id);
+  
+  /**
+   * @brief Set capture device type: FLIR Boson or not.
+   *
+   * @param boson true: FLIR Boson false: Normal USB webcam
+   *
+   */
+  void set_boson(bool boson);
 
   /**
    * @brief Open capture device with device name.
@@ -192,7 +201,7 @@ private:
   /**
    * @brief capture device.
    */
-  cv::VideoCapture cap_;
+  CaptureWrapper cap_;
 
   /**
    * @brief this stores last captured image.

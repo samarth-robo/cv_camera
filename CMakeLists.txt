@@ -21,9 +21,11 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
-  )
+  ${OpenCV_INCLUDE_DIRS}
+)
 
 ## Declare a cpp library
+add_library(capture_wrapper src/BosonCapture.cpp src/CaptureWrapper.cpp)
 add_library(cv_camera src/capture.cpp src/driver.cpp)
 add_library(cv_camera_nodelet src/cv_camera_nodelet.cpp)
 
@@ -34,7 +36,11 @@ add_dependencies(cv_camera_node cv_camera)
 add_dependencies(cv_camera_nodelet cv_camera)
 
 ## Specify libraries to link a library or executable target against
+target_link_libraries(capture_wrapper
+  ${OpenCV_LIBS}
+)
 target_link_libraries(cv_camera
+  capture_wrapper
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
   )

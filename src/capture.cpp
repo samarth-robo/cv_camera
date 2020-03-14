@@ -23,6 +23,10 @@ Capture::Capture(ros::NodeHandle &node, ros::NodeHandle &param_node,
 {
 }
 
+void Capture::set_boson(bool boson) {
+  cap_.set_boson(boson);
+}
+
 void Capture::loadCameraInfo()
 {
   std::string url;

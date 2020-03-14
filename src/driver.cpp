@@ -22,6 +22,7 @@ void Driver::setup()
 {
   double hz(DEFAULT_RATE);
   int32_t device_id(0);
+  bool boson(true);
   std::string device_path("");
   std::string frame_id("camera_frame");
   std::string camera_name("camera");
@@ -31,6 +32,7 @@ void Driver::setup()
   private_node_.getParam("frame_id", frame_id);
   private_node_.getParam("camera_name", camera_name);
   private_node_.getParam("rate", hz);
+  private_node_.getParam("boson", boson);
 
   int32_t image_width(640);
   int32_t image_height(480);
@@ -40,6 +42,7 @@ void Driver::setup()
                             "image_raw",
                             PUBLISHER_BUFFER_SIZE,
                             frame_id, camera_name));
+  camera_->set_boson(boson);
 
   if (private_node_.getParam("file", file_path) && file_path != "")
   {
