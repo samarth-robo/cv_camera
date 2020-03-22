@@ -115,9 +115,9 @@ void BosonCapture::open(int32_t id) {
 
   // map fd+offset into a process location (kernel will decide due to our
   // NULL). lenght and properties are also passed
-  printf(WHT ">>> Image width  =" YEL "%i" WHT "\n", width);
-  printf(WHT ">>> Image height =" YEL "%i" WHT "\n", height);
-  printf(WHT ">>> Buffer lenght=" YEL "%i" WHT "\n", bufferinfo.length);
+  printf(WHT ">>> Image width   =" YEL "%i" WHT "\n", width);
+  printf(WHT ">>> Image height  =" YEL "%i" WHT "\n", height);
+  printf(WHT ">>> Buffer length =" YEL "%i" WHT "\n", bufferinfo.length);
 
   void *buffer_start = mmap(NULL, bufferinfo.length, PROT_READ | PROT_WRITE,
                             MAP_SHARED, fd, bufferinfo.m.offset);
