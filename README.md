@@ -74,10 +74,10 @@ The Boson is a thermal camera from FLIR, which plugs in to USB and acts like a w
 the Boson by setting the parameter `_boson:=true` for this node.
 
 OpenCV VideoCapture class has an opaque [buffer](https://stackoverflow.com/a/30032945) which introduces delays
-in the data capture. Empirically I have observed this causes the timestamps are off by about 500 ms for FLIR Boson.
+in the data capture. Empirically I have observed this causes the timestamps to be off by about 500 ms for FLIR Boson.
 Hence this repository uses V4L code from the official [Boson driver](https://github.com/FLIR/BosonUSB).
 
-The [flir_boson_usb](https://github.com/astuff/flir_boson_usb) does not publish the raw 16-bit thermal data. It 
+The [flir_boson_usb](https://github.com/astuff/flir_boson_usb) package does not publish the raw 16-bit thermal data. It 
 applies a linear AGC and some image processing. This repository will publish the raw 16-bit thermal data.
 You are responsible for manipulating it downstream.
 
